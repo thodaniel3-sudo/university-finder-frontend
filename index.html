@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Finder — Search</title>
+    <title>Home — University Finder</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -15,38 +15,85 @@
 
     <style>
         :root {
+            margin-top: 5px;
             --uf-blue: #0b5ed7;
             --uf-blue-dark: #0a4fb0;
         }
+:root {
+    --uf-blue: #0b5ed7;
+    --uf-blue-dark: #0a4fb0;
+}
 
+body {
+    margin: 0;
+    padding-top: 0px;
+    background: #ffffff;
+    border-top: 10px solid var(--uf-blue);
+}
         body {
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
             color: #1a1a1a;
+            background: #ffffff;
         }
 
-        .hero {
+        .hero-section {
             background: linear-gradient(135deg, var(--uf-blue) 0%, var(--uf-blue-dark) 100%);
             color: #fff;
-            padding: 3rem 0;
+            padding: 4rem 0;
         }
 
-        .hero h1 {
+        .hero-section h1 {
             line-height: 1.15;
         }
 
-        .hero .form-control {
-            height: 58px;
-            font-size: 1.1rem;
-        }
-
-        .hero .btn-search {
-            height: 58px;
-            font-weight: 600;
-        }
-
         .hero-icon {
-            font-size: 14rem;
+            font-size: 16rem;
             opacity: 0.15;
+            display: block;
+        }
+
+        .feature-card {
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .feature-chip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1.5rem 0.75rem;
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
+            text-align: center;
+            height: 100%;
+            transition: transform 0.15s ease-in-out;
+        }
+
+        .feature-chip:hover {
+            transform: translateY(-2px);
+        }
+
+        .feature-chip i {
+            font-size: 1.75rem;
+            color: var(--uf-blue);
+        }
+
+        .feature-chip span {
+            font-size: 0.9rem;
+            color: #495057;
         }
 
         .source-badge {
@@ -107,54 +154,94 @@
 </head>
 <body>
 
-<!-- ===== Navbar ===== -->
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background: var(--uf-blue);">
+<!-- ===== Navbar (white, matches Flask base.html) ===== -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/">
+        <a class="navbar-brand fw-bold text-primary" href="/">
             <i class="bi bi-mortarboard-fill me-2"></i>University Finder
         </a>
-        <div class="ms-auto">
-            <a href="https://university-finder-7skg.onrender.com/login"
-               class="btn btn-light btn-sm me-2">
-                <i class="bi bi-box-arrow-in-right me-1"></i>Log in
-            </a>
-            <a href="https://university-finder-7skg.onrender.com/register"
-               class="btn btn-outline-light btn-sm">
-                <i class="bi bi-person-plus me-1"></i>Register
-            </a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://university-finder-7skg.onrender.com/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://university-finder-7skg.onrender.com/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://university-finder-7skg.onrender.com/universities">Universities</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://university-finder-7skg.onrender.com/search">
+                        <i class="bi bi-search me-1"></i>Search
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://university-finder-7skg.onrender.com/login">Log in</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://university-finder-7skg.onrender.com/register">Register</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
 
-<!-- ===== Hero + search ===== -->
-<section class="hero">
-    <div class="container">
+<!-- ===== Hero ===== -->
+<section class="hero-section text-white">
+    <div class="container py-5">
         <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-5 fw-bold mb-3">
+            <div class="col-lg-7">
+                <h1 class="display-4 fw-bold mb-3">
                     Find the right university,<br>
                     for the right programme,<br>
                     at the right time.
                 </h1>
                 <p class="lead mb-4">
-                    Search across our database, the open web, official university
-                    sites, YouTube, and (if you connect) your Facebook Pages.
+                    Enter your academic profile, discover programmes that fit
+                    your qualifications, and track every application in one
+                    place — from search to submission.
                 </p>
 
-                <form id="search-form" class="row g-2">
+                <form id="search-form" class="row g-2 mb-4" autocomplete="off">
                     <div class="col-md-9">
-                        <input type="text" id="search-query" class="form-control"
-                               placeholder="e.g. Materials Science scholarships Germany"
-                               autofocus autocomplete="off">
+                        <input type="text" id="search-query" class="form-control form-control-lg"
+                               placeholder="Search any programme, field, or country — e.g. &quot;marine biology norway&quot;">
                     </div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-light btn-search w-100">
+                        <button type="submit" class="btn btn-light btn-lg w-100">
                             <i class="bi bi-search me-1"></i>Search
                         </button>
                     </div>
                 </form>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="https://university-finder-7skg.onrender.com/register" class="btn btn-outline-light">
+                        <i class="bi bi-person-plus me-2"></i>Create account
+                    </a>
+                    <a href="https://university-finder-7skg.onrender.com/about" class="btn btn-outline-light">
+                        Learn more
+                    </a>
+                    <a href="https://university-finder-7skg.onrender.com/saved" class="btn btn-outline-light">
+                        <i class="bi bi-bookmark me-2"></i>Saved programmes
+                    </a>
+                    <a href="https://university-finder-7skg.onrender.com/saved/programs" class="btn btn-outline-light">
+                        <i class="bi bi-envelope-paper me-2"></i>Email saved programmes
+                    </a>
+                </div>
+
+                <p class="text-white-50 small mt-3 mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    This platform helps you discover and prepare for university applications.
+                </p>
             </div>
-            <div class="col-lg-4 d-none d-lg-block text-center">
+            <div class="col-lg-5 d-none d-lg-block text-center">
                 <i class="bi bi-mortarboard-fill hero-icon"></i>
             </div>
         </div>
@@ -171,20 +258,132 @@
     <div id="results"></div>
 </main>
 
-<!-- ===== Footer ===== -->
+<!-- ===== What you can do here ===== -->
+<section class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">What you can do here</h2>
+        <p class="text-muted">Built for students, by students.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm feature-card">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-search feature-icon text-primary"></i>
+                    <h5 class="card-title mt-3">Search programmes</h5>
+                    <p class="card-text text-muted">
+                        Filter universities and programmes by country, degree
+                        level, field, language, and more.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm feature-card">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-check2-circle feature-icon text-success"></i>
+                    <h5 class="card-title mt-3">See if you match</h5>
+                    <p class="card-text text-muted">
+                        Transparent matching shows which requirements you meet,
+                        which you don't, and which need verification.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm feature-card">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-send feature-icon text-warning"></i>
+                    <h5 class="card-title mt-3">Track applications</h5>
+                    <p class="card-text text-muted">
+                        Save programmes, upload documents, draft inquiry emails,
+                        and track every application status.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Everything you need ===== -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold mb-2">Everything you need, in one place</h3>
+            <p class="text-muted mb-0">
+                Built to take you from first search to sent application.
+            </p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-person-check"></i>
+                    <span>User accounts</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-building"></i>
+                    <span>University database</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-search"></i>
+                    <span>Search</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-check2-circle"></i>
+                    <span>Matching engine</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-kanban"></i>
+                    <span>Application tracking</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-file-earmark-arrow-up"></i>
+                    <span>Document uploads</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-envelope-paper"></i>
+                    <span>Review-before-send email</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="feature-chip">
+                    <i class="bi bi-bookmark-heart"></i>
+                    <span>Saved programmes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Footer (unchanged) ===== -->
 <footer class="bg-dark text-light py-4 mt-5">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 mb-2">
-                <h6 class="fw-bold mb-1">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5 class="fw-bold">
                     <i class="bi bi-mortarboard-fill me-2"></i>University Finder
-                </h6>
-                <p class="text-secondary small mb-0">
-                    Helping students discover and apply to the right universities and programmes.
+                </h5>
+                <p class="text-secondary mb-0 small">
+                    Helping students discover and apply to the right
+                    universities and programmes.
                 </p>
             </div>
             <div class="col-md-6 text-md-end">
-                <p class="text-secondary small mb-0">
+                <p class="text-secondary mb-1 small">
+                    This platform provides information, assistance, and tools to help you in your university search and application process.
+                </p>
+                <p class="text-secondary mb-0 small">
                     &copy; <span id="year"></span> University Finder
                 </p>
             </div>
@@ -192,15 +391,14 @@
     </div>
 </footer>
 
-<!-- ===== Bootstrap ===== -->
+<!-- ===== Bootstrap JS ===== -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-<!-- ===== App config ===== -->
+<!-- ===== Config ===== -->
 <script>
     window.UF_CONFIG = {
-        // Point this at your Render backend. Change the URL if you redeploy.
         API_BASE_URL: "https://university-finder-7skg.onrender.com"
     };
 </script>
@@ -220,10 +418,6 @@
     var resultsBox = document.getElementById("results");
 
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    // --------------------------------------------------------
-    // Status banner
-    // --------------------------------------------------------
 
     var wakeTimer = null;
 
@@ -256,18 +450,7 @@
         wakeTimer = null;
     }
 
-    // --------------------------------------------------------
-    // Warm up the backend on page load (silent — no banner)
-    // --------------------------------------------------------
-
-    function warmUp() {
-        fetch(API_HEALTH, { method: "GET" }).catch(function () {});
-    }
-    warmUp();
-
-    // --------------------------------------------------------
-    // Rendering helpers
-    // --------------------------------------------------------
+    fetch(API_HEALTH, { method: "GET" }).catch(function () {});
 
     function escapeHtml(s) {
         return String(s == null ? "" : s)
@@ -316,7 +499,6 @@
         if (r.published_at) metaParts.push('<i class="bi bi-calendar-event me-1"></i>' + escapeHtml(String(r.published_at).slice(0, 10)));
 
         var url = r.website_url || r.url || r.source_url || "";
-
         var desc = r.description || "";
         if (desc.length > 260) desc = desc.slice(0, 260) + "…";
 
@@ -341,10 +523,6 @@
               '</div>' +
             '</div>';
     }
-
-    // --------------------------------------------------------
-    // Search
-    // --------------------------------------------------------
 
     function doSearch(query) {
         resultsBox.innerHTML = "";
@@ -386,11 +564,10 @@
 
     function renderResults(data) {
         var sources = data.sources || {};
-        var totalUnique = (data.total || 0);
+        var totalUnique = data.total || 0;
 
         var out = [];
 
-        // Header
         out.push(
             '<div class="d-flex justify-content-between align-items-center flex-wrap mb-3">' +
               '<h3 class="fw-bold mb-0">Results for <span class="text-muted">"' +
@@ -399,7 +576,6 @@
             '</div>'
         );
 
-        // Source status row
         var statusHtml = '<div class="mb-4 small text-muted d-flex flex-wrap gap-3">';
         Object.keys(sources).forEach(function (k) {
             var s = sources[k];
@@ -415,7 +591,6 @@
         statusHtml += '</div>';
         out.push(statusHtml);
 
-        // Catalog
         if (data.discovery_results && data.discovery_results.length) {
             out.push(sectionHeader('<i class="bi bi-stars text-success"></i>',
                                    'From our growing catalog',
@@ -425,7 +600,6 @@
                      '</div>');
         }
 
-        // DB programmes
         if (data.db_programmes && data.db_programmes.length) {
             out.push(sectionHeader('<i class="bi bi-database text-success"></i>',
                                    'Programmes from our database',
@@ -446,7 +620,6 @@
                      '</div>');
         }
 
-        // University portals
         if (data.university_results && data.university_results.length) {
             out.push(sectionHeader('<i class="bi bi-mortarboard text-warning"></i>',
                                    'From university portals',
@@ -456,7 +629,6 @@
                      '</div>');
         }
 
-        // YouTube
         if (data.youtube_results && data.youtube_results.length) {
             out.push(sectionHeader('<i class="bi bi-youtube text-danger"></i>',
                                    'From YouTube',
@@ -466,7 +638,6 @@
                      '</div>');
         }
 
-        // Facebook
         if (data.facebook_connected && data.facebook_results && data.facebook_results.length) {
             out.push(sectionHeader('<i class="bi bi-facebook text-primary"></i>',
                                    'From your Facebook Pages',
@@ -476,7 +647,6 @@
                      '</div>');
         }
 
-        // Web
         if (data.web_results && data.web_results.length) {
             out.push(sectionHeader('<i class="bi bi-globe text-primary"></i>',
                                    'From the open web',
@@ -504,10 +674,6 @@
         resultsBox.innerHTML = out.join("");
     }
 
-    // --------------------------------------------------------
-    // Wire up the form
-    // --------------------------------------------------------
-
     form.addEventListener("submit", function (e) {
         e.preventDefault();
         var q = (queryInput.value || "").trim();
@@ -515,7 +681,6 @@
         doSearch(q);
     });
 
-    // Support ?q= in the URL
     var params = new URLSearchParams(window.location.search);
     var initial = (params.get("q") || "").trim();
     if (initial) {
