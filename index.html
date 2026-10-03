@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Finder — Search</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --uf-blue: #0b5ed7;
+            --uf-blue-dark: #0a4fb0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            color: #1a1a1a;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--uf-blue) 0%, var(--uf-blue-dark) 100%);
+            color: #fff;
+            padding: 3rem 0;
+        }
+
+        .hero h1 {
+            line-height: 1.15;
+        }
+
+        .hero .form-control {
+            height: 58px;
+            font-size: 1.1rem;
+        }
+
+        .hero .btn-search {
+            height: 58px;
+            font-weight: 600;
+        }
+
+        .hero-icon {
+            font-size: 14rem;
+            opacity: 0.15;
+        }
+
+        .source-badge {
+            font-size: 0.75rem;
+            padding: 0.3em 0.55em;
+        }
+
+        .data-card {
+            transition: box-shadow 0.15s ease-in-out;
+        }
+
+        .data-card:hover {
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .data-card .card-title-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .data-card .card-title-link:hover {
+            text-decoration: underline;
+            color: var(--uf-blue);
+        }
+
+        #backend-status {
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        #backend-status.waking {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #664d03;
+        }
+
+        #backend-status.ready {
+            background: #d1e7dd;
+            border: 1px solid #a3cfbb;
+            color: #0a3622;
+        }
+
+        #backend-status.error {
+            background: #f8d7da;
+            border: 1px solid #f1aeb5;
+            color: #58151c;
+        }
+
+        .section-title {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        footer {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background: var(--uf-blue);">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            <i class="bi bi-mortarboard-fill me-2"></i>University Finder
+        </a>
+        <div class="ms-auto">
+            <a href="https://university-finder-7skg.onrender.com/login"
+               class="btn btn-light btn-sm me-2">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Log in
+            </a>
+            <a href="https://university-finder-7skg.onrender.com/register"
+               class="btn btn-outline-light btn-sm">
+                <i class="bi bi-person-plus me-1"></i>Register
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== Hero + search ===== -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">
+                    Find the right university,<br>
+                    for the right programme,<br>
+                    at the right time.
+                </h1>
+                <p class="lead mb-4">
+                    Search across our database, the open web, official university
+                    sites, YouTube, and (if you connect) your Facebook Pages.
+                </p>
+
+                <form id="search-form" class="row g-2">
+                    <div class="col-md-9">
+                        <input type="text" id="search-query" class="form-control"
+                               placeholder="e.g. Materials Science scholarships Germany"
+                               autofocus autocomplete="off">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-light btn-search w-100">
+                            <i class="bi bi-search me-1"></i>Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block text-center">
+                <i class="bi bi-mortarboard-fill hero-icon"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Backend status banner ===== -->
+<div class="container mt-3">
+    <div id="backend-status" class="p-2 px-3" style="display:none;"></div>
+</div>
+
+<!-- ===== Results ===== -->
+<main class="container py-4">
+    <div id="results"></div>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="bg-dark text-light py-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <h6 class="fw-bold mb-1">
+                    <i class="bi bi-mortarboard-fill me-2"></i>University Finder
+                </h6>
+                <p class="text-secondary small mb-0">
+                    Helping students discover and apply to the right universities and programmes.
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="text-secondary small mb-0">
+                    &copy; <span id="year"></span> University Finder
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ===== Bootstrap ===== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+<!-- ===== App config ===== -->
+<script>
+    window.UF_CONFIG = {
+        // Point this at your Render backend. Change the URL if you redeploy.
+        API_BASE_URL: "https://university-finder-7skg.onrender.com"
+    };
+</script>
+
+<!-- ===== App logic ===== -->
+<script>
+(function () {
+    "use strict";
+
+    var API_BASE = window.UF_CONFIG.API_BASE_URL.replace(/\/$/, "");
+    var API_SEARCH = API_BASE + "/api/v1/search";
+    var API_HEALTH = API_BASE + "/api/v1/health";
+
+    var form = document.getElementById("search-form");
+    var queryInput = document.getElementById("search-query");
+    var statusBox = document.getElementById("backend-status");
+    var resultsBox = document.getElementById("results");
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // --------------------------------------------------------
+    // Status banner
+    // --------------------------------------------------------
+
+    var wakeTimer = null;
+
+    function showStatus(kind, html) {
+        statusBox.className = "p-2 px-3 " + kind;
+        statusBox.innerHTML = html;
+        statusBox.style.display = "";
+    }
+
+    function hideStatus() {
+        statusBox.style.display = "none";
+    }
+
+    function startWakeCountdown() {
+        var seconds = 0;
+        clearInterval(wakeTimer);
+        wakeTimer = setInterval(function () {
+            seconds++;
+            showStatus("waking",
+                '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                '<strong>Starting the backend…</strong> ' +
+                'The free server sleeps when idle. First request takes ' +
+                seconds + 's so far. Please wait — this only happens once.'
+            );
+        }, 1000);
+    }
+
+    function stopWakeCountdown() {
+        clearInterval(wakeTimer);
+        wakeTimer = null;
+    }
+
+    // --------------------------------------------------------
+    // Warm up the backend on page load (silent — no banner)
+    // --------------------------------------------------------
+
+    function warmUp() {
+        fetch(API_HEALTH, { method: "GET" }).catch(function () {});
+    }
+    warmUp();
+
+    // --------------------------------------------------------
+    // Rendering helpers
+    // --------------------------------------------------------
+
+    function escapeHtml(s) {
+        return String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function sectionHeader(iconHtml, title, count) {
+        return '<h4 class="fw-bold mb-3 mt-4 section-title">' +
+               iconHtml + ' ' + title +
+               ' <span class="text-muted fs-6">(' + count + ')</span></h4>';
+    }
+
+    function resultCard(r) {
+        var badges = "";
+        var st = r.source_type || "";
+        if (st === "supabase" || st === "catalog") {
+            badges += '<span class="badge bg-success source-badge me-1">Catalog</span>';
+        } else if (st === "university_official") {
+            badges += '<span class="badge bg-warning text-dark source-badge me-1">University official</span>';
+        } else if (st === "university_web") {
+            badges += '<span class="badge bg-secondary source-badge me-1">University web</span>';
+        } else if (st === "brave" || st === "web") {
+            badges += '<span class="badge bg-primary source-badge me-1">Web</span>';
+        } else if (st === "youtube") {
+            badges += '<span class="badge bg-danger source-badge me-1">YouTube</span>';
+        } else if (st === "facebook") {
+            badges += '<span class="badge bg-primary source-badge me-1">Facebook</span>';
+        }
+        if (r.page_type && r.page_type !== "other") {
+            badges += '<span class="badge bg-info text-dark source-badge me-1">' +
+                      escapeHtml(r.page_type.charAt(0).toUpperCase() + r.page_type.slice(1)) +
+                      '</span>';
+        }
+        if (r.verified) {
+            badges += '<span class="badge bg-info text-dark source-badge me-1">Verified</span>';
+        }
+
+        var metaParts = [];
+        if (r.organization) metaParts.push('<i class="bi bi-building me-1"></i>' + escapeHtml(r.organization));
+        if (r.source) metaParts.push('<i class="bi bi-globe me-1"></i>' + escapeHtml(r.source));
+        if (r.country) metaParts.push('<i class="bi bi-geo-alt me-1"></i>' + escapeHtml(r.country));
+        if (r.published_at) metaParts.push('<i class="bi bi-calendar-event me-1"></i>' + escapeHtml(String(r.published_at).slice(0, 10)));
+
+        var url = r.website_url || r.url || r.source_url || "";
+
+        var desc = r.description || "";
+        if (desc.length > 260) desc = desc.slice(0, 260) + "…";
+
+        return '' +
+            '<div class="col-lg-6">' +
+              '<div class="card data-card shadow-sm border-0 h-100">' +
+                '<div class="card-body d-flex flex-column">' +
+                  '<div class="mb-2">' + badges + '</div>' +
+                  '<h6 class="fw-bold mb-1">' +
+                    (url ? '<a class="card-title-link" href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(r.title || "(untitled)") + '</a>' : escapeHtml(r.title || "(untitled)")) +
+                  '</h6>' +
+                  (metaParts.length ? '<p class="small text-muted mb-2">' + metaParts.join(" · ") + '</p>' : '') +
+                  (desc ? '<p class="small mb-3 flex-grow-1">' + escapeHtml(desc) + '</p>' : '<div class="flex-grow-1"></div>') +
+                  (url ?
+                    '<div class="d-flex flex-wrap gap-2">' +
+                      '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">' +
+                        'Visit page <i class="bi bi-box-arrow-up-right ms-1"></i>' +
+                      '</a>' +
+                    '</div>'
+                    : '') +
+                '</div>' +
+              '</div>' +
+            '</div>';
+    }
+
+    // --------------------------------------------------------
+    // Search
+    // --------------------------------------------------------
+
+    function doSearch(query) {
+        resultsBox.innerHTML = "";
+        showStatus("waking",
+            '<span class="spinner-border spinner-border-sm me-2"></span>' +
+            '<strong>Searching…</strong> The backend may take a moment if it was idle.'
+        );
+
+        fetch(API_SEARCH, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                query: query,
+                sources: ["supabase", "brave", "university", "youtube", "facebook"]
+            })
+        })
+        .then(function (r) {
+            if (!r.ok) {
+                return r.json().then(function (j) {
+                    throw new Error(j.message || ("HTTP " + r.status));
+                }).catch(function () {
+                    throw new Error("HTTP " + r.status);
+                });
+            }
+            return r.json();
+        })
+        .then(function (data) {
+            hideStatus();
+            renderResults(data);
+        })
+        .catch(function (err) {
+            showStatus("error",
+                '<i class="bi bi-exclamation-triangle me-1"></i>' +
+                '<strong>Search failed.</strong> ' + escapeHtml(err.message) +
+                ' — please try again in a few seconds.'
+            );
+        });
+    }
+
+    function renderResults(data) {
+        var sources = data.sources || {};
+        var totalUnique = (data.total || 0);
+
+        var out = [];
+
+        // Header
+        out.push(
+            '<div class="d-flex justify-content-between align-items-center flex-wrap mb-3">' +
+              '<h3 class="fw-bold mb-0">Results for <span class="text-muted">"' +
+              escapeHtml(data.query || "") + '"</span></h3>' +
+              '<span class="badge bg-dark fs-6">' + totalUnique + ' results</span>' +
+            '</div>'
+        );
+
+        // Source status row
+        var statusHtml = '<div class="mb-4 small text-muted d-flex flex-wrap gap-3">';
+        Object.keys(sources).forEach(function (k) {
+            var s = sources[k];
+            var color = s.status === "success" ? "text-success"
+                      : s.status === "unavailable" ? "text-secondary"
+                      : "text-danger";
+            statusHtml += '<span class="' + color + '">' +
+                          '<i class="bi bi-dot"></i>' +
+                          escapeHtml(k) + ": " + escapeHtml(s.status) +
+                          " (" + (s.count || 0) + ")" +
+                          '</span>';
+        });
+        statusHtml += '</div>';
+        out.push(statusHtml);
+
+        // Catalog
+        if (data.discovery_results && data.discovery_results.length) {
+            out.push(sectionHeader('<i class="bi bi-stars text-success"></i>',
+                                   'From our growing catalog',
+                                   data.discovery_results.length));
+            out.push('<div class="row g-3 mb-4">' +
+                     data.discovery_results.map(resultCard).join("") +
+                     '</div>');
+        }
+
+        // DB programmes
+        if (data.db_programmes && data.db_programmes.length) {
+            out.push(sectionHeader('<i class="bi bi-database text-success"></i>',
+                                   'Programmes from our database',
+                                   data.db_programmes.length));
+            out.push('<div class="row g-3 mb-4">' +
+                     data.db_programmes.map(function (p) {
+                         var uni = p.universities || {};
+                         if (Array.isArray(uni)) uni = uni[0] || {};
+                         return resultCard({
+                             title: p.programme_name,
+                             organization: uni.name || "",
+                             description: p.field || p.specialization || "",
+                             country: uni.country || "",
+                             website_url: p.programme_url || "",
+                             source_type: "supabase"
+                         });
+                     }).join("") +
+                     '</div>');
+        }
+
+        // University portals
+        if (data.university_results && data.university_results.length) {
+            out.push(sectionHeader('<i class="bi bi-mortarboard text-warning"></i>',
+                                   'From university portals',
+                                   data.university_results.length));
+            out.push('<div class="row g-3 mb-4">' +
+                     data.university_results.map(resultCard).join("") +
+                     '</div>');
+        }
+
+        // YouTube
+        if (data.youtube_results && data.youtube_results.length) {
+            out.push(sectionHeader('<i class="bi bi-youtube text-danger"></i>',
+                                   'From YouTube',
+                                   data.youtube_results.length));
+            out.push('<div class="row g-3 mb-4">' +
+                     data.youtube_results.map(resultCard).join("") +
+                     '</div>');
+        }
+
+        // Facebook
+        if (data.facebook_connected && data.facebook_results && data.facebook_results.length) {
+            out.push(sectionHeader('<i class="bi bi-facebook text-primary"></i>',
+                                   'From your Facebook Pages',
+                                   data.facebook_results.length));
+            out.push('<div class="row g-3 mb-4">' +
+                     data.facebook_results.map(resultCard).join("") +
+                     '</div>');
+        }
+
+        // Web
+        if (data.web_results && data.web_results.length) {
+            out.push(sectionHeader('<i class="bi bi-globe text-primary"></i>',
+                                   'From the open web',
+                                   data.web_results.length));
+            out.push('<div class="row g-3 mb-4">' +
+                     data.web_results.map(function (r) {
+                         return resultCard({
+                             title: r.title,
+                             description: r.description,
+                             source: r.source,
+                             website_url: r.url,
+                             source_type: "brave"
+                         });
+                     }).join("") +
+                     '</div>');
+        }
+
+        if (totalUnique === 0) {
+            out.push('<div class="alert alert-secondary">' +
+                     '<i class="bi bi-info-circle me-1"></i>' +
+                     'No results found for that query.' +
+                     '</div>');
+        }
+
+        resultsBox.innerHTML = out.join("");
+    }
+
+    // --------------------------------------------------------
+    // Wire up the form
+    // --------------------------------------------------------
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var q = (queryInput.value || "").trim();
+        if (!q) { queryInput.focus(); return; }
+        doSearch(q);
+    });
+
+    // Support ?q= in the URL
+    var params = new URLSearchParams(window.location.search);
+    var initial = (params.get("q") || "").trim();
+    if (initial) {
+        queryInput.value = initial;
+        doSearch(initial);
+    }
+})();
+</script>
+
+</body>
+</html>
