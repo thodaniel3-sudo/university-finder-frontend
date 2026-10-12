@@ -1,15 +1,5 @@
 {
   "version": 2,
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [
-        { "type": "host", "value": "www.university-finder.me" }
-      ],
-      "destination": "https://university-finder.me/$1",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
       "source": "/(.*)",
